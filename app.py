@@ -7,7 +7,7 @@ import pickle
 import ollama
 from pypdf import PdfReader
 
-from main import (
+from backend import (
     extract_text,
     clean_text,
     chunk_text,

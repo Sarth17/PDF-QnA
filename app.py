@@ -105,29 +105,68 @@ else:
 
             answer = generate_answer(question, top_chunks)
 
-            pages = sorted(set(chunk["page"] for chunk in top_chunks))
+            sources = []
+            for chunk in top_chunks:
+                snippet = chunk["text"][:300] + "..."
+                sources.append({
+                    "page": chunk["page"],
+                    "snippet": snippet
+                })
 
             st.session_state.chat_history.append({
                 "question": question,
                 "answer": answer,
-                "sources": pages
+                "sources": sources
             })
 
     st.divider()
+
     st.subheader("💬 Conversation")
-
     for chat in st.session_state.chat_history:
-        st.markdown("**🧑 You:**")
-        st.write(chat["question"])
 
-        st.markdown("**🤖 Assistant:**")
-        st.write(chat["answer"])
+        # ---------- USER BUBBLE (RIGHT) ----------
+        col1, col2 = st.columns([1, 4])
 
-        st.markdown("📌 *Sources:*")
-        for p in chat["sources"]:
-            st.write(f"- Page {p}")
+        with col2:
+            with st.container():
+                st.markdown(
+                    f"""
+                    <div style="
+                        background-color:#1d0587;
+                        padding:10px;
+                        border-radius:10px;
+                        margin-bottom:10px;
+                        text-align:right;
+                    ">
+                        {"YOU:  " + chat["question"]}
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
 
-        st.divider()
+        # ---------- ASSISTANT BUBBLE (LEFT) ----------
+        col1, col2 = st.columns([4, 1])
+
+        with col1:
+            with st.container():
+                st.markdown(
+                    f"""
+                    <div style="
+                        background-color:#3b0587;
+                        padding:10px;
+                        border-radius:10px;
+                        margin-bottom:5px;
+                    ">
+                        {"ASSISTANT:  "+ chat["answer"]}
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+                # ---------- SOURCES ----------
+                for src in chat["sources"]:
+                    with st.expander(f"📌 Page {src['page']}"):
+                        st.write(src["snippet"])
 
         #answer
         #st.markdown("Answer")

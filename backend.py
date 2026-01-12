@@ -54,7 +54,7 @@ def clean_text(pages):
 
 
 
-#making 100 words chunk
+#making 170 words chunk
 def chunk_text(pages, chunk_size = 170):
     chunk_arr = []
     
